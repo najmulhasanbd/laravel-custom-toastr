@@ -78,7 +78,34 @@
         placeholder: 'Type to search',
         noData: 'No Results!',
         depth: 2
-      }
+      },
+      plugins: [
+        function(hook, vm) {
+          hook.doneEach(function() {
+            // Find all javascript code blocks
+            var codeBlocks = document.querySelectorAll('pre[data-lang="javascript"]');
+            codeBlocks.forEach(function(pre) {
+              var code = pre.textContent;
+              // If the code contains customToastr, add a Run button
+              if (code.includes('customToastr(')) {
+                var btn = document.createElement('button');
+                btn.innerHTML = '▶️ Run';
+                btn.style.cssText = 'position: absolute; top: 5px; right: 45px; background: #4f46e5; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; z-index: 10;';
+                btn.onclick = function() {
+                  // Execute the code safely
+                  try {
+                    new Function(code)();
+                  } catch (e) {
+                    console.error(e);
+                  }
+                };
+                pre.style.position = 'relative';
+                pre.appendChild(btn);
+              }
+            });
+          });
+        }
+      ]
     };
     
     // Toastr Logic
