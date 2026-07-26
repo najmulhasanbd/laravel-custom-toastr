@@ -34,32 +34,41 @@ In your main layout file (usually `resources/views/layouts/app.blade.php`), incl
 ```blade
     <!-- Your application content -->
     
-    <x-custom-toastr />
+    <x-custom-toastr position="bottom-right" />
 </body>
 </html>
 ```
 
+**Available Positions:**
+You can easily change the position of the toast notifications by passing the `position` prop. The default is `bottom-right`.
+- `top-right`
+- `top-left`
+- `bottom-right`
+- `bottom-left`
+- `top-center`
+- `bottom-center`
+
 ### 2. Trigger Toasts from Controllers
-You can easily trigger beautiful toast notifications from any of your Laravel controllers using the `Toastr` facade:
+You can easily trigger beautiful toast notifications from any of your Laravel controllers using the built-in `toastr()` helper function. No need to import any classes!
 
 ```php
-use Najmul\CustomToastr\Facades\Toastr;
-
 class YourController extends Controller
 {
     public function store()
     {
         // ... your business logic ...
 
-        Toastr::success('Data saved successfully!');
-        // Toastr::error('Something went wrong!');
-        // Toastr::warning('Please check your inputs again.');
-        // Toastr::info('This is an informative message.');
+        toastr()->success('Data saved successfully!');
+        // toastr()->error('Something went wrong!');
+        // toastr()->warning('Please check your inputs again.');
+        // toastr()->info('This is an informative message.');
 
         return redirect()->back();
     }
 }
 ```
+
+*(You can also use the Facade: `\Najmul\CustomToastr\Facades\Toastr::success(...)` if you prefer).*
 
 ### ⚡ Triggering via Javascript (Optional)
 If you need to show a toast message using JavaScript (for example, after an AJAX request), the package exposes a global function for you:

@@ -1,3 +1,5 @@
+@props(['position' => 'bottom-right'])
+
 @once
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -15,11 +17,19 @@
 
         .custom-toastr-list {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
             z-index: 9999;
             list-style: none;
+            display: flex;
+            flex-direction: column;
         }
+
+        /* Positions */
+        .pos-top-right { top: 2rem; right: 2rem; }
+        .pos-bottom-right { bottom: 2rem; right: 2rem; }
+        .pos-top-left { top: 2rem; left: 2rem; }
+        .pos-bottom-left { bottom: 2rem; left: 2rem; }
+        .pos-top-center { top: 2rem; left: 50%; transform: translateX(-50%); align-items: center; }
+        .pos-bottom-center { bottom: 2rem; left: 50%; transform: translateX(-50%); align-items: center; }
 
         .custom-toastr-item {
             position: relative;
@@ -32,12 +42,22 @@
             box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
             margin: 0.5rem 0;
             padding: 1rem;
-            transform: translateX(400px);
-            transition: transform 1s;
+            opacity: 0;
+            transition: all 0.4s ease;
         }
 
+        /* Start Animation States */
+        .pos-top-right .custom-toastr-item,
+        .pos-bottom-right .custom-toastr-item { transform: translateX(100%); }
+        .pos-top-left .custom-toastr-item,
+        .pos-bottom-left .custom-toastr-item { transform: translateX(-100%); }
+        .pos-top-center .custom-toastr-item { transform: translateY(-100%); }
+        .pos-bottom-center .custom-toastr-item { transform: translateY(100%); }
+
+        /* Visible State */
         .custom-toastr-item.visible {
-            transform: translateX(0);
+            transform: translate(0, 0) !important;
+            opacity: 1;
         }
 
         .custom-toastr-icon {
@@ -87,9 +107,7 @@
         }
 
         @keyframes custom-toastr-countdown {
-            to {
-                transform: scaleX(0);
-            }
+            to { transform: scaleX(0); }
         }
 
         .custom-toastr-animate {
@@ -99,7 +117,7 @@
 @endonce
 
 <div class="custom-toastr-wrapper">
-    <ul class='custom-toastr-list' id="custom-toastr-list"></ul>
+    <ul class='custom-toastr-list pos-{{ $position }}' id="custom-toastr-list"></ul>
 </div>
 
 <template id="custom-toastr-template">
@@ -142,12 +160,20 @@
                 item.querySelector('.custom-toastr-close').addEventListener('click', function(e) {
                     const targetItem = e.target.closest('.custom-toastr-item');
                     targetItem.classList.remove('visible');
-                    setTimeout(() => targetItem.remove(), 1000);
+                    setTimeout(() => targetItem.remove(), 400); // reduced from 1000 to match transition
                 });
 
-                list.appendChild(item);
+                // Prepend if position is top, append if bottom
+                if (list.classList.contains('pos-top-right') || list.classList.contains('pos-top-left') || list.classList.contains('pos-top-center')) {
+                    list.prepend(item);
+                } else {
+                    list.appendChild(item);
+                }
 
-                const appendedItem = list.lastElementChild;
+                // Need to get the correct item depending on prepend/append
+                const appendedItem = list.classList.contains('pos-top-right') || list.classList.contains('pos-top-left') || list.classList.contains('pos-top-center') 
+                    ? list.firstElementChild 
+                    : list.lastElementChild;
 
                 setTimeout(() => appendedItem.classList.add('visible'), 10);
                 setTimeout(() => appendedItem.classList.remove('visible'), 5000);
@@ -155,10 +181,9 @@
                     if (appendedItem && appendedItem.parentNode) {
                         appendedItem.remove();
                     }
-                }, 6000);
+                }, 5500);
             }
 
-            // Check for Laravel session flash messages
             @if(session()->has('custom_toastr.success'))
                 showToast('Success', "{!! addslashes(session('custom_toastr.success')) !!}");
             @endif
