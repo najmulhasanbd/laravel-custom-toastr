@@ -7,23 +7,15 @@
   [![License](https://img.shields.io/packagist/l/najmulhasanbd/laravel-custom-toastr.svg?style=flat-square)](https://packagist.org/packages/najmulhasanbd/laravel-custom-toastr)
 
   <br><br>
-  
-  <h3>
-    📖 <a href="https://najmulhasanbd.github.io/laravel-custom-toastr/">Read the Official Documentation</a> 📖
-  </h3>
-  <p>
-    👉 <a href="https://najmulhasanbd.github.io/laravel-custom-toastr/#/playground"><strong>Try the Live Interactive Playground!</strong></a> 👈
-  </p>
 </div>
 
-<hr>
+## About Laravel Custom Toastr
 
-## ✨ Features
-- **Plug & Play:** Extremely easy to integrate into any Laravel project.
-- **Modern Design:** Beautifully crafted UI with smooth animations.
-- **Blade Component:** Comes with a ready-to-use `<x-custom-toastr />` component.
-- **Session Flashing:** Automatically detects Laravel session flashes (Success, Error, Warning, Info).
-- **Customizable:** Fully publishable views so you can tweak the HTML/CSS/JS as you like!
+Laravel Custom Toastr is a powerful and easy-to-use package that allows you to quickly and easily add flash messages to your Laravel projects. Whether you need to alert users of a successful form submission, an error, or any other important information, flash messages are a simple and effective solution for providing feedback to your users.
+
+With Laravel Custom Toastr, you can easily record and store messages within the session, making it simple to retrieve and display them on the current or next page. This improves user engagement and enhances the overall user experience on your website or application.
+
+Whether you're a beginner or an experienced developer, Laravel Custom Toastr's intuitive and straightforward design makes it easy to integrate into your projects. So, if you're looking for a reliable, flexible and easy to use flash messages solution, Laravel Custom Toastr is the perfect choice.
 
 ---
 
@@ -52,17 +44,6 @@ In your main layout file (usually `resources/views/layouts/app.blade.php`), incl
 </html>
 ```
 
-**Customization Props:**
-You can easily customize the behavior by passing these props:
-
-- **`position`** (string): Changes the position. Default is `bottom-right`.
-  - Options: `top-right`, `top-left`, `bottom-right`, `bottom-left`, `top-center`, `bottom-center`
-- **`duration`** (integer): Time in milliseconds before the toast hides. Default is `5000` (5 seconds).
-- **`animation`** (string): The entrance animation. Default is `slide`.
-  - Options: `slide`, `fade`, `zoom`
-- **`progress`** (boolean): Show or hide the countdown progress bar. Default is `true`.
-- **`maxToasts`** (integer): Limit the maximum number of toasts visible at once. Default is `0` (unlimited).
-
 ### 2. Trigger Toasts from Controllers
 You can easily trigger beautiful toast notifications from any of your Laravel controllers using the built-in `toastr()` helper function. No need to import any classes!
 
@@ -71,21 +52,9 @@ class YourController extends Controller
 {
     public function store()
     {
-        // ... your business logic ...
-
-        // Basic usage
         toastr()->success('Data saved successfully!');
-        
-        // With a Title
-        toastr()->success('Data saved successfully!', 'Success!');
-        
-        // With Title and Custom Position
-        toastr()->error('Something went wrong!', 'Oops!', 'top-center');
-        
-        // With Title, Custom Position, and Custom Duration (e.g. 10 seconds)
+        toastr()->error('Something went wrong!', 'Oops!');
         toastr()->warning('Please check your inputs again.', 'Warning', 'bottom-left', 10000);
-        
-        // Info message
         toastr()->info('This is an informative message.');
 
         return redirect()->back();
@@ -95,26 +64,45 @@ class YourController extends Controller
 
 *(You can also use the Facade: `\Najmul\CustomToastr\Facades\Toastr::success(...)` if you prefer).*
 
-### ⚡ Triggering via Javascript (Optional)
-If you need to show a toast message using JavaScript (for example, after an AJAX request), the package exposes a global function for you:
+---
 
-```javascript
-// Available types: 'Success', 'Error', 'Warning', 'Info'
-customToastr('Success', 'This is a JS triggered success message!');
-```
+## 📖 Official Documentation
+
+Documentation for Laravel Custom Toastr can be found on our [Official GitHub Pages](https://najmulhasanbd.github.io/laravel-custom-toastr/).
+
+👉 [**Try the Live Interactive Playground!**](https://najmulhasanbd.github.io/laravel-custom-toastr/#/playground)
 
 ---
 
-## 🎨 Customization
+## 🤝 Contributors and sponsors
 
-The default design is modern and clean, but if you want to customize the HTML, CSS, or JavaScript, you can easily publish the component view to your project:
+Join our team of contributors and make a lasting impact on our project!
 
-```bash
-php artisan vendor:publish --tag="najmulhasanbd-toastr-views"
-```
-After running this command, you will find the blade file at `resources/views/vendor/custom-toastr/components/toastr.blade.php`. You can edit this file to perfectly match your application's branding.
+We are always looking for passionate individuals who want to contribute their skills and ideas. Whether you're a developer, designer, or simply have a great idea, we welcome your participation and collaboration.
+
+Shining stars of our community:
+
+<div align="center">
+  <br>
+  <img src="https://github.com/najmulhasanbd.png" width="80" style="border-radius:50%;"><br>
+  <strong>Md Najmul Hasan</strong><br>
+  💻 📖
+</div>
+
+---
+
+## 📧 Contact
+
+Laravel Custom Toastr is being actively developed by **Md Najmul Hasan**. You can reach out with questions, bug reports, or feature requests on any of the following:
+
+- [Github Issues](https://github.com/najmulhasanbd/laravel-custom-toastr/issues)
+- [Github](https://github.com/najmulhasanbd)
+- [Email me directly](mailto:najmulcse247@gmail.com)
 
 ---
 
 ## 📜 License
-This package is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+Laravel Custom Toastr is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+Made with ❤️ by [Md Najmul Hasan](https://github.com/najmulhasanbd)
