@@ -1,0 +1,31 @@
+{
+    "name": "najmul/laravel-custom-toastr",
+    "description": "A beautifully designed custom toastr for Laravel.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Md Najmul Hasan",
+            "email": "your.email@example.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^9.0|^10.0|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Najmul\\CustomToastr\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Najmul\\CustomToastr\\CustomToastrServiceProvider"
+            ],
+            "aliases": {
+                "Toastr": "Najmul\\CustomToastr\\Facades\\Toastr"
+            }
+        }
+    }
+}
