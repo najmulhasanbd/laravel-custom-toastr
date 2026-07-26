@@ -1,5 +1,6 @@
 - Getting Started
   - [Introduction](/)
+  - [Playground](playground.md)
   - [Installation](installation.md)
   
 - Guides
