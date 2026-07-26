@@ -33,17 +33,19 @@
 
         .custom-toastr-item {
             position: relative;
-            width: 20rem;
+            width: 22rem;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 1rem;
-            justify-content: space-between;
+            justify-content: flex-start;
             background-color: white;
-            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
             margin: 0.5rem 0;
             padding: 1rem;
             opacity: 0;
             cursor: pointer; /* Click to close */
+            overflow: hidden;
         }
         
         /* Anim: Slide (Default) */
@@ -83,18 +85,18 @@
         }
 
         .custom-toastr-icon {
-            font-size: 1.25rem;
-            color: rgba(0, 0, 0, 0.75);
-            margin-top: 0.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .custom-toastr-icon i {
-            padding: 5px;
-            font-size: 16px;
-            width: 30px;
-            height: 30px;
-            line-height: 20px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            width: 36px;
+            height: 36px;
             color: #fff !important;
             border-radius: 50%;
         }
@@ -104,13 +106,13 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            padding-right: 1.5rem;
         }
 
         .custom-toastr-title {
-            font-size: 0.95rem;
+            font-size: 1rem;
             margin-bottom: 0.25rem;
-            color: #333;
-            font-weight: 900;
+            font-weight: 700;
         }
 
         .custom-toastr-info {
@@ -120,12 +122,14 @@
         }
 
         .custom-toastr-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
             border: none;
             background-color: transparent;
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: rgba(0, 0, 0, 0.3);
             cursor: pointer;
-            margin-top: 0.2rem;
         }
 
         .custom-toastr-close:hover {
@@ -137,7 +141,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 0.2rem;
+            height: 4px;
             transform-origin: left;
         }
 
@@ -228,6 +232,7 @@
                     const titleEl = document.createElement('strong');
                     titleEl.className = 'custom-toastr-title';
                     titleEl.textContent = title;
+                    titleEl.style.color = color;
                     container.prepend(titleEl);
                 }
                 
