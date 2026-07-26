@@ -45,6 +45,10 @@ You can easily customize the behavior by passing these props:
 - **`position`** (string): Changes the position. Default is `bottom-right`.
   - Options: `top-right`, `top-left`, `bottom-right`, `bottom-left`, `top-center`, `bottom-center`
 - **`duration`** (integer): Time in milliseconds before the toast hides. Default is `5000` (5 seconds).
+- **`animation`** (string): The entrance animation. Default is `slide`.
+  - Options: `slide`, `fade`, `zoom`
+- **`progress`** (boolean): Show or hide the countdown progress bar. Default is `true`.
+- **`maxToasts`** (integer): Limit the maximum number of toasts visible at once. Default is `0` (unlimited).
 
 ### 2. Trigger Toasts from Controllers
 You can easily trigger beautiful toast notifications from any of your Laravel controllers using the built-in `toastr()` helper function. No need to import any classes!
@@ -56,14 +60,17 @@ class YourController extends Controller
     {
         // ... your business logic ...
 
-        // Basic usage (uses default position and duration from blade component)
+        // Basic usage
         toastr()->success('Data saved successfully!');
         
-        // Custom position for a single toast
-        toastr()->error('Something went wrong!', 'top-center');
+        // With a Title
+        toastr()->success('Data saved successfully!', 'Success!');
         
-        // Custom position and custom duration (e.g. 10 seconds)
-        toastr()->warning('Please check your inputs again.', 'bottom-left', 10000);
+        // With Title and Custom Position
+        toastr()->error('Something went wrong!', 'Oops!', 'top-center');
+        
+        // With Title, Custom Position, and Custom Duration (e.g. 10 seconds)
+        toastr()->warning('Please check your inputs again.', 'Warning', 'bottom-left', 10000);
         
         // Info message
         toastr()->info('This is an informative message.');

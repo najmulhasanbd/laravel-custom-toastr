@@ -4,11 +4,12 @@ namespace Najmul\CustomToastr;
 
 class Toastr
 {
-    protected function addToast($type, $message, $position, $duration)
+    protected function addToast($type, $message, $title, $position, $duration)
     {
         $toasts = session()->get('custom_toastr_messages', []);
         $toasts[] = [
             'type' => $type,
+            'title' => $title,
             'message' => $message,
             'position' => $position,
             'duration' => $duration
@@ -16,23 +17,23 @@ class Toastr
         session()->flash('custom_toastr_messages', $toasts);
     }
 
-    public function success($message, $position = null, $duration = null)
+    public function success($message, $title = null, $position = null, $duration = null)
     {
-        $this->addToast('Success', $message, $position, $duration);
+        $this->addToast('Success', $message, $title, $position, $duration);
     }
 
-    public function error($message, $position = null, $duration = null)
+    public function error($message, $title = null, $position = null, $duration = null)
     {
-        $this->addToast('Error', $message, $position, $duration);
+        $this->addToast('Error', $message, $title, $position, $duration);
     }
 
-    public function warning($message, $position = null, $duration = null)
+    public function warning($message, $title = null, $position = null, $duration = null)
     {
-        $this->addToast('Warning', $message, $position, $duration);
+        $this->addToast('Warning', $message, $title, $position, $duration);
     }
 
-    public function info($message, $position = null, $duration = null)
+    public function info($message, $title = null, $position = null, $duration = null)
     {
-        $this->addToast('Info', $message, $position, $duration);
+        $this->addToast('Info', $message, $title, $position, $duration);
     }
 }

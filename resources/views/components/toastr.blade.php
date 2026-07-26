@@ -1,4 +1,4 @@
-@props(['position' => 'bottom-right', 'duration' => 5000])
+@props(['position' => 'bottom-right', 'duration' => 5000, 'animation' => 'slide', 'progress' => true, 'maxToasts' => 0])
 
 @once
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -35,7 +35,7 @@
             position: relative;
             width: 20rem;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 1rem;
             justify-content: space-between;
             background-color: white;
@@ -43,26 +43,49 @@
             margin: 0.5rem 0;
             padding: 1rem;
             opacity: 0;
+            cursor: pointer; /* Click to close */
+        }
+        
+        /* Anim: Slide (Default) */
+        .custom-toastr-item.anim-slide {
             transition: all 0.4s ease;
         }
+        .pos-top-right .custom-toastr-item.anim-slide,
+        .pos-bottom-right .custom-toastr-item.anim-slide { transform: translateX(100%); }
+        .pos-top-left .custom-toastr-item.anim-slide,
+        .pos-bottom-left .custom-toastr-item.anim-slide { transform: translateX(-100%); }
+        .pos-top-center .custom-toastr-item.anim-slide { transform: translateY(-100%); }
+        .pos-bottom-center .custom-toastr-item.anim-slide { transform: translateY(100%); }
 
-        /* Start Animation States */
-        .pos-top-right .custom-toastr-item,
-        .pos-bottom-right .custom-toastr-item { transform: translateX(100%); }
-        .pos-top-left .custom-toastr-item,
-        .pos-bottom-left .custom-toastr-item { transform: translateX(-100%); }
-        .pos-top-center .custom-toastr-item { transform: translateY(-100%); }
-        .pos-bottom-center .custom-toastr-item { transform: translateY(100%); }
-
-        /* Visible State */
-        .custom-toastr-item.visible {
+        .custom-toastr-item.anim-slide.visible {
             transform: translate(0, 0) !important;
+            opacity: 1;
+        }
+        
+        /* Anim: Fade */
+        .custom-toastr-item.anim-fade {
+            transition: opacity 0.5s ease;
+            transform: translate(0, 0); /* Static position */
+        }
+        .custom-toastr-item.anim-fade.visible {
+            opacity: 1;
+        }
+        
+        /* Anim: Zoom */
+        .custom-toastr-item.anim-zoom {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.5);
+            transform-origin: center;
+        }
+        .custom-toastr-item.anim-zoom.visible {
+            transform: scale(1);
             opacity: 1;
         }
 
         .custom-toastr-icon {
             font-size: 1.25rem;
             color: rgba(0, 0, 0, 0.75);
+            margin-top: 0.2rem;
         }
 
         .custom-toastr-icon i {
@@ -78,11 +101,22 @@
 
         .custom-toastr-item-container {
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .custom-toastr-title {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+            color: #333;
+            font-weight: 900;
         }
 
         .custom-toastr-info {
             font-size: 0.8rem;
             color: rgba(0, 0, 0, 0.75);
+            line-height: 1.4;
         }
 
         .custom-toastr-close {
@@ -91,9 +125,10 @@
             font-size: 1rem;
             color: rgba(0, 0, 0, 0.3);
             cursor: pointer;
+            margin-top: 0.2rem;
         }
 
-        .custom-toastr-close:active {
+        .custom-toastr-close:hover {
             color: black;
         }
 
@@ -125,6 +160,7 @@
     <li class='custom-toastr-item'>
         <span class='custom-toastr-icon'></span>
         <div class='custom-toastr-item-container'>
+            <!-- Title will be injected here if present -->
             <p class='custom-toastr-info'></p>
         </div>
         <button class='custom-toastr-close'>x</button>
@@ -137,8 +173,13 @@
         document.addEventListener("DOMContentLoaded", function() {
             const wrapper = document.getElementById('custom-toastr-wrapper');
             const template = document.getElementById('custom-toastr-template');
+            
+            // Blade defaults
             const defaultPosition = "{{ $position }}";
             const defaultDuration = parseInt("{{ $duration }}") || 5000;
+            const defaultAnimation = "{{ $animation }}";
+            const showProgress = {{ $progress ? 'true' : 'false' }};
+            const maxToasts = parseInt("{{ $maxToasts }}") || 0;
 
             const notificationStyles = {
                 Success: { icon: '<i class="fa-solid fa-check" style="background-color: #198754;"></i>', color: '#198754' },
@@ -156,28 +197,55 @@
                 }
                 return list;
             }
+            
+            function enforceMaxLimit(list, isTop) {
+                if (maxToasts > 0 && list.children.length > maxToasts) {
+                    // Remove oldest toast
+                    const toastToRemove = isTop ? list.lastElementChild : list.firstElementChild;
+                    if (toastToRemove) {
+                        toastToRemove.classList.remove('visible');
+                        setTimeout(() => toastToRemove.remove(), 400);
+                    }
+                }
+            }
 
-            function showToast(type, msg, position = null, duration = null) {
+            function showToast(type, msg, title = null, position = null, duration = null) {
                 const clone = template.content.cloneNode(true);
                 const item = clone.querySelector('.custom-toastr-item');
                 
                 const finalPosition = position || defaultPosition;
                 const finalDuration = duration ? parseInt(duration) : defaultDuration;
                 
+                // Add Animation class
+                item.classList.add(`anim-${defaultAnimation}`);
+                
                 const { icon, color } = notificationStyles[type];
                 
                 item.querySelector('.custom-toastr-icon').innerHTML = icon;
+                
+                const container = item.querySelector('.custom-toastr-item-container');
+                if (title) {
+                    const titleEl = document.createElement('strong');
+                    titleEl.className = 'custom-toastr-title';
+                    titleEl.textContent = title;
+                    container.prepend(titleEl);
+                }
+                
                 item.querySelector('.custom-toastr-info').textContent = msg;
 
                 const timeline = item.querySelector('.custom-toastr-timeline');
-                timeline.style.backgroundColor = color;
-                timeline.style.animationDuration = finalDuration + 'ms';
-                timeline.classList.add('custom-toastr-animate');
+                if (showProgress) {
+                    timeline.style.backgroundColor = color;
+                    timeline.style.animationDuration = finalDuration + 'ms';
+                    timeline.classList.add('custom-toastr-animate');
+                } else {
+                    timeline.style.display = 'none';
+                }
 
-                item.querySelector('.custom-toastr-close').addEventListener('click', function(e) {
-                    const targetItem = e.target.closest('.custom-toastr-item');
-                    targetItem.classList.remove('visible');
-                    setTimeout(() => targetItem.remove(), 400); 
+                // Click to close functionality
+                item.addEventListener('click', function(e) {
+                    item.classList.remove('visible');
+                    setTimeout(() => item.remove(), 400); 
                 });
 
                 const list = getListContainer(finalPosition);
@@ -192,11 +260,15 @@
                 const appendedItem = isTop ? list.firstElementChild : list.lastElementChild;
 
                 setTimeout(() => appendedItem.classList.add('visible'), 10);
+                
+                enforceMaxLimit(list, isTop);
+                
                 setTimeout(() => {
                     if (appendedItem && appendedItem.classList.contains('visible')) {
                         appendedItem.classList.remove('visible');
                     }
                 }, finalDuration);
+                
                 setTimeout(() => {
                     if (appendedItem && appendedItem.parentNode) {
                         appendedItem.remove();
@@ -211,8 +283,9 @@
                     showToast(
                         "{!! addslashes($toast['type']) !!}", 
                         "{!! addslashes($toast['message']) !!}", 
-                        {!! $toast['position'] ? "'".addslashes($toast['position'])."'" : 'null' !!}, 
-                        {!! $toast['duration'] ? (int)$toast['duration'] : 'null' !!}
+                        {!! !empty($toast['title']) ? "'".addslashes($toast['title'])."'" : 'null' !!}, 
+                        {!! !empty($toast['position']) ? "'".addslashes($toast['position'])."'" : 'null' !!}, 
+                        {!! !empty($toast['duration']) ? (int)$toast['duration'] : 'null' !!}
                     );
                 @endforeach
             @endif
