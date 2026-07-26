@@ -1,4 +1,4 @@
-@props(['position' => 'bottom-right'])
+@props(['position' => 'bottom-right', 'duration' => 5000])
 
 @once
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -111,13 +111,15 @@
         }
 
         .custom-toastr-animate {
-            animation: custom-toastr-countdown 5s linear forwards;
+            animation-name: custom-toastr-countdown;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
         }
     </style>
 @endonce
 
 <div class="custom-toastr-wrapper">
-    <ul class='custom-toastr-list pos-{{ $position }}' id="custom-toastr-list"></ul>
+    <ul class='custom-toastr-list pos-{{ $position }}' id="custom-toastr-list" data-duration="{{ $duration }}"></ul>
 </div>
 
 <template id="custom-toastr-template">
@@ -136,6 +138,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const list = document.getElementById('custom-toastr-list');
             const template = document.getElementById('custom-toastr-template');
+            const duration = parseInt(list.getAttribute('data-duration')) || 5000;
 
             const notificationStyles = {
                 Success: { icon: '<i class="fa-solid fa-check" style="background-color: #198754;"></i>', color: '#198754' },
@@ -155,33 +158,32 @@
 
                 const timeline = item.querySelector('.custom-toastr-timeline');
                 timeline.style.backgroundColor = color;
+                timeline.style.animationDuration = duration + 'ms';
                 timeline.classList.add('custom-toastr-animate');
 
                 item.querySelector('.custom-toastr-close').addEventListener('click', function(e) {
                     const targetItem = e.target.closest('.custom-toastr-item');
                     targetItem.classList.remove('visible');
-                    setTimeout(() => targetItem.remove(), 400); // reduced from 1000 to match transition
+                    setTimeout(() => targetItem.remove(), 400); 
                 });
 
-                // Prepend if position is top, append if bottom
                 if (list.classList.contains('pos-top-right') || list.classList.contains('pos-top-left') || list.classList.contains('pos-top-center')) {
                     list.prepend(item);
                 } else {
                     list.appendChild(item);
                 }
 
-                // Need to get the correct item depending on prepend/append
                 const appendedItem = list.classList.contains('pos-top-right') || list.classList.contains('pos-top-left') || list.classList.contains('pos-top-center') 
                     ? list.firstElementChild 
                     : list.lastElementChild;
 
                 setTimeout(() => appendedItem.classList.add('visible'), 10);
-                setTimeout(() => appendedItem.classList.remove('visible'), 5000);
+                setTimeout(() => appendedItem.classList.remove('visible'), duration);
                 setTimeout(() => {
                     if (appendedItem && appendedItem.parentNode) {
                         appendedItem.remove();
                     }
-                }, 5500);
+                }, duration + 500);
             }
 
             @if(session()->has('custom_toastr.success'))

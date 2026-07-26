@@ -34,19 +34,17 @@ In your main layout file (usually `resources/views/layouts/app.blade.php`), incl
 ```blade
     <!-- Your application content -->
     
-    <x-custom-toastr position="bottom-right" />
+    <x-custom-toastr position="bottom-right" duration="5000" />
 </body>
 </html>
 ```
 
-**Available Positions:**
-You can easily change the position of the toast notifications by passing the `position` prop. The default is `bottom-right`.
-- `top-right`
-- `top-left`
-- `bottom-right`
-- `bottom-left`
-- `top-center`
-- `bottom-center`
+**Customization Props:**
+You can easily customize the behavior by passing these props:
+
+- **`position`** (string): Changes the position. Default is `bottom-right`.
+  - Options: `top-right`, `top-left`, `bottom-right`, `bottom-left`, `top-center`, `bottom-center`
+- **`duration`** (integer): Time in milliseconds before the toast hides. Default is `5000` (5 seconds).
 
 ### 2. Trigger Toasts from Controllers
 You can easily trigger beautiful toast notifications from any of your Laravel controllers using the built-in `toastr()` helper function. No need to import any classes!
