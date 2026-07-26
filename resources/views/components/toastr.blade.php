@@ -45,7 +45,6 @@
             padding: 1rem;
             opacity: 0;
             cursor: pointer; /* Click to close */
-            overflow: hidden;
         }
         
         /* Anim: Slide (Default) */
@@ -142,6 +141,8 @@
             left: 0;
             width: 100%;
             height: 4px;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
             transform-origin: left;
         }
 
