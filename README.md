@@ -85,7 +85,7 @@ customToastr('Success', 'This is a JS triggered success message!');
 The default design is modern and clean, but if you want to customize the HTML, CSS, or JavaScript, you can easily publish the component view to your project:
 
 ```bash
-php artisan vendor:publish --tag="custom-toastr-views"
+php artisan vendor:publish --tag="najmulhasanbd-toastr-views"
 ```
 After running this command, you will find the blade file at `resources/views/vendor/custom-toastr/components/toastr.blade.php`. You can edit this file to perfectly match your application's branding.
 

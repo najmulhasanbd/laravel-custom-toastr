@@ -33,7 +33,7 @@ class CustomToastrServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../resources/views' => resource_path('views/vendor/custom-toastr'),
-            ], 'custom-toastr-views');
+            ], 'najmulhasanbd-toastr-views');
         }
     }
 }
