@@ -1,6 +1,6 @@
-# Laravel Custom Toastr
+# Laravel Toastr Message
 
-A beautifully designed, customizable Toastr package for Laravel.
+A beautifully designed, customizable Toastr message package for Laravel.
 
 ## Installation
 
