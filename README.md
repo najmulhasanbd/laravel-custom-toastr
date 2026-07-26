@@ -1,9 +1,22 @@
 <div align="center">
-    <h1>🚀 Laravel Toastr Message</h1>
-    <p>A beautifully designed, customizable, and easy-to-use Toastr notification package for Laravel.</p>
+  <h2>🚀 Laravel Custom Toastr</h2>
+  <p>A beautifully designed, highly customizable, and easy-to-use Toastr notification package for Laravel.</p>
+  
+  [![Latest Version on Packagist](https://img.shields.io/packagist/v/najmulhasanbd/laravel-custom-toastr.svg?style=flat-square)](https://packagist.org/packages/najmulhasanbd/laravel-custom-toastr)
+  [![Total Downloads](https://img.shields.io/packagist/dt/najmulhasanbd/laravel-custom-toastr.svg?style=flat-square)](https://packagist.org/packages/najmulhasanbd/laravel-custom-toastr)
+  [![License](https://img.shields.io/packagist/l/najmulhasanbd/laravel-custom-toastr.svg?style=flat-square)](https://packagist.org/packages/najmulhasanbd/laravel-custom-toastr)
+
+  <br><br>
+  
+  <h3>
+    📖 <a href="https://najmulhasanbd.github.io/laravel-custom-toastr/">Read the Official Documentation</a> 📖
+  </h3>
+  <p>
+    👉 <a href="https://najmulhasanbd.github.io/laravel-custom-toastr/#/playground"><strong>Try the Live Interactive Playground!</strong></a> 👈
+  </p>
 </div>
 
----
+<hr>
 
 ## ✨ Features
 - **Plug & Play:** Extremely easy to integrate into any Laravel project.
