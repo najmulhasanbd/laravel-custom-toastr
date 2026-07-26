@@ -4,23 +4,35 @@ namespace Najmul\CustomToastr;
 
 class Toastr
 {
-    public function success($message)
+    protected function addToast($type, $message, $position, $duration)
     {
-        session()->flash('custom_toastr.success', $message);
+        $toasts = session()->get('custom_toastr_messages', []);
+        $toasts[] = [
+            'type' => $type,
+            'message' => $message,
+            'position' => $position,
+            'duration' => $duration
+        ];
+        session()->flash('custom_toastr_messages', $toasts);
     }
 
-    public function error($message)
+    public function success($message, $position = null, $duration = null)
     {
-        session()->flash('custom_toastr.error', $message);
+        $this->addToast('Success', $message, $position, $duration);
     }
 
-    public function warning($message)
+    public function error($message, $position = null, $duration = null)
     {
-        session()->flash('custom_toastr.warning', $message);
+        $this->addToast('Error', $message, $position, $duration);
     }
 
-    public function info($message)
+    public function warning($message, $position = null, $duration = null)
     {
-        session()->flash('custom_toastr.info', $message);
+        $this->addToast('Warning', $message, $position, $duration);
+    }
+
+    public function info($message, $position = null, $duration = null)
+    {
+        $this->addToast('Info', $message, $position, $duration);
     }
 }

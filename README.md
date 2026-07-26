@@ -56,10 +56,17 @@ class YourController extends Controller
     {
         // ... your business logic ...
 
+        // Basic usage (uses default position and duration from blade component)
         toastr()->success('Data saved successfully!');
-        // toastr()->error('Something went wrong!');
-        // toastr()->warning('Please check your inputs again.');
-        // toastr()->info('This is an informative message.');
+        
+        // Custom position for a single toast
+        toastr()->error('Something went wrong!', 'top-center');
+        
+        // Custom position and custom duration (e.g. 10 seconds)
+        toastr()->warning('Please check your inputs again.', 'bottom-left', 10000);
+        
+        // Info message
+        toastr()->info('This is an informative message.');
 
         return redirect()->back();
     }

@@ -118,8 +118,7 @@
     </style>
 @endonce
 
-<div class="custom-toastr-wrapper">
-    <ul class='custom-toastr-list pos-{{ $position }}' id="custom-toastr-list" data-duration="{{ $duration }}"></ul>
+<div class="custom-toastr-wrapper" id="custom-toastr-wrapper">
 </div>
 
 <template id="custom-toastr-template">
@@ -136,9 +135,10 @@
 @once
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const list = document.getElementById('custom-toastr-list');
+            const wrapper = document.getElementById('custom-toastr-wrapper');
             const template = document.getElementById('custom-toastr-template');
-            const duration = parseInt(list.getAttribute('data-duration')) || 5000;
+            const defaultPosition = "{{ $position }}";
+            const defaultDuration = parseInt("{{ $duration }}") || 5000;
 
             const notificationStyles = {
                 Success: { icon: '<i class="fa-solid fa-check" style="background-color: #198754;"></i>', color: '#198754' },
@@ -147,9 +147,22 @@
                 Info: { icon: '<i class="fa-solid fa-circle-info" style="background-color: #0DCAF0;"></i>', color: '#0DCAF0' },
             };
 
-            function showToast(type, msg) {
+            function getListContainer(pos) {
+                let list = wrapper.querySelector(`.custom-toastr-list.pos-${pos}`);
+                if (!list) {
+                    list = document.createElement('ul');
+                    list.className = `custom-toastr-list pos-${pos}`;
+                    wrapper.appendChild(list);
+                }
+                return list;
+            }
+
+            function showToast(type, msg, position = null, duration = null) {
                 const clone = template.content.cloneNode(true);
                 const item = clone.querySelector('.custom-toastr-item');
+                
+                const finalPosition = position || defaultPosition;
+                const finalDuration = duration ? parseInt(duration) : defaultDuration;
                 
                 const { icon, color } = notificationStyles[type];
                 
@@ -158,7 +171,7 @@
 
                 const timeline = item.querySelector('.custom-toastr-timeline');
                 timeline.style.backgroundColor = color;
-                timeline.style.animationDuration = duration + 'ms';
+                timeline.style.animationDuration = finalDuration + 'ms';
                 timeline.classList.add('custom-toastr-animate');
 
                 item.querySelector('.custom-toastr-close').addEventListener('click', function(e) {
@@ -167,42 +180,42 @@
                     setTimeout(() => targetItem.remove(), 400); 
                 });
 
-                if (list.classList.contains('pos-top-right') || list.classList.contains('pos-top-left') || list.classList.contains('pos-top-center')) {
+                const list = getListContainer(finalPosition);
+
+                const isTop = finalPosition.includes('top');
+                if (isTop) {
                     list.prepend(item);
                 } else {
                     list.appendChild(item);
                 }
 
-                const appendedItem = list.classList.contains('pos-top-right') || list.classList.contains('pos-top-left') || list.classList.contains('pos-top-center') 
-                    ? list.firstElementChild 
-                    : list.lastElementChild;
+                const appendedItem = isTop ? list.firstElementChild : list.lastElementChild;
 
                 setTimeout(() => appendedItem.classList.add('visible'), 10);
-                setTimeout(() => appendedItem.classList.remove('visible'), duration);
+                setTimeout(() => {
+                    if (appendedItem && appendedItem.classList.contains('visible')) {
+                        appendedItem.classList.remove('visible');
+                    }
+                }, finalDuration);
                 setTimeout(() => {
                     if (appendedItem && appendedItem.parentNode) {
                         appendedItem.remove();
                     }
-                }, duration + 500);
+                }, finalDuration + 500);
             }
 
-            @if(session()->has('custom_toastr.success'))
-                showToast('Success', "{!! addslashes(session('custom_toastr.success')) !!}");
-            @endif
-            
-            @if(session()->has('custom_toastr.error'))
-                showToast('Error', "{!! addslashes(session('custom_toastr.error')) !!}");
-            @endif
-
-            @if(session()->has('custom_toastr.warning'))
-                showToast('Warning', "{!! addslashes(session('custom_toastr.warning')) !!}");
-            @endif
-
-            @if(session()->has('custom_toastr.info'))
-                showToast('Info', "{!! addslashes(session('custom_toastr.info')) !!}");
-            @endif
-            
             window.customToastr = showToast;
+
+            @if(session()->has('custom_toastr_messages'))
+                @foreach(session('custom_toastr_messages') as $toast)
+                    showToast(
+                        "{!! addslashes($toast['type']) !!}", 
+                        "{!! addslashes($toast['message']) !!}", 
+                        {!! $toast['position'] ? "'".addslashes($toast['position'])."'" : 'null' !!}, 
+                        {!! $toast['duration'] ? (int)$toast['duration'] : 'null' !!}
+                    );
+                @endforeach
+            @endif
         });
     </script>
 @endonce
